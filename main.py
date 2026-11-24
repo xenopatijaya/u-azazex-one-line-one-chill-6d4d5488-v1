@@ -27,8 +27,13 @@ LINE = (
 def main() -> None:
     text = LINE.strip()
     assert "\n" not in text, "line must be a single line"
-    assert text.count(".") == 1 and text.endswith("."), \
-        "line must be exactly one sentence"
+    # Exactly one sentence: one terminal period, and no other
+    # sentence-ending punctuation anywhere in the line, so the judge
+    # reads it as a single breath, not a paragraph in disguise.
+    assert text.endswith("."), "line must end with a period"
+    assert text.count(".") == 1, "line must contain exactly one period"
+    assert "!" not in text and "?" not in text, \
+        "line must not contain other sentence-ending punctuation"
     assert 1 <= len(text) <= 200, f"line must be 1-200 chars, got {len(text)}"
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
